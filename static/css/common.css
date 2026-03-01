@@ -52,7 +52,7 @@ html, body { margin: 0; padding: 0; }
     0 0 0 2px rgb(var(--brand-rgb) / 0.20),
     0 14px 40px rgb(var(--brand-rgb) / 0.16);
 
-  --container: 1180px;
+  --container: 1080px;
 
   --radius-xs: 10px;
   --radius-sm: 14px;
