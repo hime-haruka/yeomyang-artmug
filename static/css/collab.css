@@ -1,0 +1,180 @@
+#collab { padding: 56px 0; }
+
+.sec__head { margin-bottom: 18px; }
+.sec__eyebrow {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--brand) 64%, black);
+}
+.sec__title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+.sec__desc {
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  color: var(--text-3);
+}
+
+/* collab wrapper card */
+#collab .card {
+  padding: 22px;
+}
+
+.tplGrid.collabGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Card anchor */
+.tplCard.collabCard {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: clip;
+  box-shadow: 0 0 0 rgba(0 0 0 / 0);
+  transform: translateY(0);
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out);
+}
+
+.tplCard.collabCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(680px 240px at 10% 0%,
+      color-mix(in srgb, var(--brand) 12%, transparent),
+      transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+.tplCard.collabCard:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--brand) 22%, var(--border));
+  box-shadow: var(--shadow-md);
+}
+
+.tplCard.collabCard:hover::before { opacity: 1; }
+
+.tplCard.collabCard:focus-visible {
+  outline: 0;
+  box-shadow: var(--shadow-md), var(--glow-brand);
+}
+
+/* Thumb */
+.collabCard__thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.collabCard__thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out);
+}
+
+.tplCard.collabCard:hover .collabCard__thumb img {
+  transform: scale(1.03);
+  filter: saturate(1.04);
+}
+
+/* No thumbnail placeholder */
+.collabCard__ph {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  font-weight: 900;
+  color: color-mix(in srgb, var(--brand) 48%, black);
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--brand) 14%, white),
+      var(--panel-2));
+}
+
+/* Meta */
+.collabCard__meta {
+  padding: 14px 16px 16px;
+}
+
+.collabCard__name {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+
+.collabCard__desc {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.collabCard__cta {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: color-mix(in srgb, var(--brand) 72%, black);
+}
+
+.collabCard__cta::after {
+  content: "→";
+  font-weight: 900;
+  transform: translateX(0);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.tplCard.collabCard:hover .collabCard__cta::after {
+  transform: translateX(2px);
+}
+
+.tplCard.collabCard::after {
+  content: "아트머그로 이동";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .2px;
+  color: color-mix(in srgb, var(--brand) 72%, black);
+  background: color-mix(in srgb, var(--brand) 18%, white);
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, var(--border));
+  box-shadow: 0 10px 26px rgb(17 24 39 / 0.07);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+}
+
+.tplCard.collabCard:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}

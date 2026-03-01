@@ -1,0 +1,281 @@
+@import url(./reset.css);
+@import url(./font.css);
+@import url(./intro.css);
+@import url(./collab.css);
+@import url(./sample.css);
+@import url(./type.css);
+@import url(./notice.css);
+@import url(./form.css);
+
+/* =========================================================
+   GLOBAL BASE
+========================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+:root {
+  --brand: #fbd204;
+  --brand-rgb: 251 210 4;
+
+  --brand-100: color-mix(in srgb, var(--brand) 14%, white);
+  --brand-200: color-mix(in srgb, var(--brand) 26%, white);
+  --brand-300: color-mix(in srgb, var(--brand) 42%, white);
+  --brand-400: color-mix(in srgb, var(--brand) 62%, white);
+
+  --brand-600: color-mix(in srgb, var(--brand) 86%, black);
+  --brand-700: color-mix(in srgb, var(--brand) 72%, black);
+  --brand-800: color-mix(in srgb, var(--brand) 58%, black);
+
+  --bg: #ffffff;
+  --bg-2: #fafafa;
+
+  --panel: #ffffff;
+  --panel-2: #fbfbfc;
+  --panel-3: color-mix(in srgb, var(--brand) 7%, white);
+
+  --border: #e7e7ee;
+  --border-strong: #d6d6df;
+
+  --text: #0f172a;
+  --text-2: #334155;
+  --text-3: #64748b;
+
+  --shadow-sm: 0 10px 26px rgb(17 24 39 / 0.07);
+  --shadow-md: 0 18px 44px rgb(17 24 39 / 0.09);
+  --shadow-lg: 0 28px 80px rgb(17 24 39 / 0.11);
+
+  --glow-brand:
+    0 0 0 2px rgb(var(--brand-rgb) / 0.20),
+    0 14px 40px rgb(var(--brand-rgb) / 0.16);
+
+  --container: 1180px;
+
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+
+  --ease-out: cubic-bezier(.22,.85,.25,1);
+  --dur-1: 140ms;
+  --dur-2: 220ms;
+  --dur-3: 420ms;
+
+  --status-open: var(--brand-300);
+  --status-reserved: var(--brand);
+  --status-closed: var(--brand-700);
+}
+
+body {
+  font-family: 'Daeojamjil', ui-sans-serif, system-ui, -apple-system,
+    "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================
+   BACKGROUND TINT
+========================================================= */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 18% -10%, color-mix(in srgb, var(--brand) 14%, white), transparent 62%),
+    radial-gradient(720px 460px at 92% 20%, color-mix(in srgb, var(--brand) 10%, white), transparent 64%);
+  opacity: 1;
+  z-index: -1;
+}
+
+main {
+  width: 1180px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+.container {
+  width: min(100%, var(--container));
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+a {
+  color: color-mix(in srgb, var(--brand) 72%, black);
+  text-decoration: none;
+  transition: color var(--dur-2) var(--ease-out);
+}
+a:hover { color: var(--brand-700); }
+
+::selection {
+  background: var(--brand);
+  color: #000;
+}
+
+/* =========================================================
+   COMMON COMPONENTS
+========================================================= */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  background: var(--panel-3);
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, var(--border));
+  color: color-mix(in srgb, var(--brand) 72%, black);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  background: var(--brand);
+  color: #000;
+  font-weight: 800;
+  border: 0;
+  cursor: pointer;
+  transition:
+    background var(--dur-2) var(--ease-out),
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+
+.button:hover {
+  background: var(--brand-300);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-brand);
+}
+
+.button:active { transform: translateY(0); }
+.button:focus-visible {
+  outline: 0;
+  box-shadow: var(--glow-brand);
+}
+
+/* =========================================================
+   SLOT ICON TOKENS
+========================================================= */
+
+.slotIcon { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
+.slotIcon--open { background: var(--status-open); border: 1px solid color-mix(in srgb, var(--brand) 28%, var(--border)); }
+.slotIcon--reserved { background: var(--status-reserved); border: 1px solid color-mix(in srgb, var(--brand) 34%, var(--border)); }
+.slotIcon--closed { background: var(--status-closed); opacity: .65; }
+
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+.container .secHead{
+  position: relative;
+  margin: 26px 0 18px;
+  padding: 18px 18px 14px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--brand) 10%, white),
+    transparent 70%
+  );
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, var(--border));
+  box-shadow: 0 14px 40px rgb(17 24 39 / 0.06);
+  overflow: hidden;
+
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container .secHead::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      900px 260px at 10% -20%,
+      rgb(var(--brand-rgb) / 0.28),
+      transparent 55%
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--brand-rgb) / 0.22),
+      transparent
+    );
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.container .secHead::after{
+  display: none;
+}
+
+/* kicker */
+.container .secHead__kicker{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: color-mix(in srgb, var(--brand) 55%, #111827);
+}
+
+.container .secHead__kicker::before{
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--brand);
+  box-shadow: var(--glow-brand);
+}
+
+/* title + underline */
+.container .secHead__title{
+  margin: 8px 0 0;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text);
+
+  position: relative;
+  display: inline-block;
+}
+
+/* desc */
+.container .secHead__desc{
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--text-2);
+  max-width: 68ch;
+  text-align: center;
+}

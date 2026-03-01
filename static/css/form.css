@@ -1,0 +1,247 @@
+#form.formSection { margin: 34px auto 58px; }
+
+#form .formCard {
+  padding: 30px 24px;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--brand) 6%, white),
+    var(--panel) 34%,
+    var(--panel) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--brand) 14%, var(--border));
+}
+
+#form .formTopBar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  margin-top: 14px;
+}
+
+#form .formActions{
+  display: inline-flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+#form .formBtn{
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-weight: 900;
+}
+
+#form .formBtn--ghost{
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--brand) 22%, var(--border));
+  color: color-mix(in srgb, var(--brand) 70%, black);
+}
+
+#form .formBtn--ghost:hover{
+  background: color-mix(in srgb, var(--brand) 10%, white);
+}
+
+#form .formBadges{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+#form .formGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 14px;
+}
+
+#form .field,
+#form .fieldGroup{
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+#form .field--wide{ grid-column: 1 / -1; }
+
+#form .field__label,
+#form .fieldGroup__label{
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+#form .field__hint{
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+#form .field__input,
+#form .field__textarea{
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--brand) 14%, var(--border));
+  background: color-mix(in srgb, var(--brand) 4%, white);
+  color: var(--text);
+  padding: 12px 12px;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out);
+}
+
+#form .field__textarea{
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.45;
+}
+
+#form .field__input::placeholder,
+#form .field__textarea::placeholder{
+  color: color-mix(in srgb, var(--text-3) 86%, white);
+}
+
+#form .field__input:focus,
+#form .field__textarea:focus{
+  background: #fff;
+  border-color: color-mix(in srgb, var(--brand) 34%, var(--border));
+  box-shadow: var(--glow-brand);
+}
+
+#form .fieldGroup{
+  padding: 12px 12px 12px;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--brand) 12%, var(--border));
+  background: var(--panel-2);
+}
+
+#form .seg{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#form .yn{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 360px;
+}
+
+#form .seg__input,
+#form .yn__input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#form .seg__item,
+#form .yn__item{
+  position: relative;
+  min-width: 0;
+}
+
+#form .seg__btn,
+#form .yn__btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--brand) 14%, var(--border));
+  background: #fff;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#form .seg__btn:hover,
+#form .yn__btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgb(17 24 39 / 0.08);
+  border-color: color-mix(in srgb, var(--brand) 26%, var(--border));
+}
+
+#form .seg__input:checked + .seg__btn,
+#form .yn__input:checked + .yn__btn{
+  background: color-mix(in srgb, var(--brand) 22%, white);
+  border-color: color-mix(in srgb, var(--brand) 36%, var(--border));
+  color: color-mix(in srgb, var(--brand) 72%, black);
+  box-shadow: var(--glow-brand);
+}
+
+#form .toast{
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  padding: 12px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand) 16%, white);
+  border: 1px solid color-mix(in srgb, var(--brand) 26%, var(--border));
+  color: color-mix(in srgb, var(--brand) 72%, black);
+  box-shadow: 0 18px 44px rgb(17 24 39 / 0.10);
+  font-weight: 900;
+  font-size: 13px;
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+  z-index: 50;
+}
+
+#form .toast.is-on{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#form .field__input,
+#form .field__textarea {
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#form .field__input::placeholder,
+#form .field__textarea::placeholder {
+  font-family: inherit;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+#form .seg__btn,
+#form .yn__btn {
+  font-family: inherit;
+  letter-spacing: -0.01em;
+}
+
+#form textarea {
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+#form input,
+#form textarea,
+#form button {
+  font-family: inherit;
+}
