@@ -12,7 +12,7 @@
 
   const COPY = {
     eyebrow: "Live2D Illustrator",
-    hello: "안녕하세요. Live2D 일러스트레이터 여망 입니다!",
+    hello: "안녕하세요. Live2D 일러스트레이터 여먕 입니다!",
     eventTitle: "Event",
     slotTitle: "슬롯",
     contactTitle: "✦ 문의 답변 가능 시간 ✦",
@@ -1905,4 +1905,5 @@
       form.reset();
       showToast("초기화 완료!");
     });
+
   })();
