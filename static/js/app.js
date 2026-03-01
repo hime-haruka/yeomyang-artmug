@@ -233,17 +233,27 @@
 
         <div class="card introCard">
 
-          <section class="introBlock introBlock--event">
-            <h3 class="introBlock__title">${esc(COPY.eventTitle)}</h3>
-            <div class="introEventList">
-              ${eventHTML || `<div class="notice__error">이벤트를 불러오지 못했습니다.</div>`}
-            </div>
-          </section>
+      <section class="introBlock introBlock--event">
+        <h3 class="introBlock__title">${esc(COPY.eventTitle)}</h3>
+
+        <div class="introEventList">
+          ${eventHTML || `<div class="notice__error">이벤트를 불러오지 못했습니다.</div>`}
+        </div>
+
+        <div class="eventGuide">
+          ⯌많은 신청 부탁드립니다!⯌
+        </div>
+      </section>
 
           <section class="introBlock introBlock--slots">
             <h3 class="introBlock__title">${esc(COPY.slotTitle)}</h3>
             <div class="slotBoard">
               ${slotHTML || `<div class="notice__error">슬롯을 불러오지 못했습니다.</div>`}
+            </div>
+
+            <div class="slotGuide">
+              <p>경우에 따라 작업가능 슬롯이 생겨나기도 합니다!</p>
+              <p>예약 확정은 선입금 순 입니다!</p>
             </div>
           </section>
 
@@ -747,16 +757,23 @@
   }
 
   function isSliderGroup(group) {
-    return group === "프리미엄" || group === "일반" || group === "디자인 샘플";
+    return (
+      group === "프리미엄" ||
+      group === "일반" ||
+      group === "디자인 샘플" ||
+      group === "삼면도"
+    );
   }
 
   function ratioClassForGroup(group) {
     if (group === "디자인 샘플") return "sampleMedia--21";
+    if (group === "삼면도") return "sampleMedia--21";
     return "sampleMedia--45";
   }
 
   function slideWidthForGroup(group) {
     if (group === "디자인 샘플") return "680px";
+    if (group === "삼면도") return "680px";
     return "460px";
   }
 
@@ -917,6 +934,15 @@
       if (t) t.classList.add("is-active");
     };
 
+    const updateCenterClass = (realIndex) => {
+    const slides = Array.from(track.children);
+    slides.forEach((el) => el.classList.remove("is-center"));
+
+    const absIndex = firstRealAbs + realIndex;
+    const target = slides[absIndex];
+    if (target) target.classList.add("is-center");
+  };
+
     const centerLeftForAbs = (absIdx) => {
       const el = allSlides[absIdx];
       if (!el) return 0;
@@ -979,6 +1005,7 @@
       });
 
       setActive(r);
+      updateCenterClass(r);
 
       clearTimeout(track._snapTimer);
       track._snapTimer = setTimeout(() => {
@@ -1091,7 +1118,7 @@
       byGroup.get(g).push(it);
     });
 
-    const order = ["프리미엄", "일반", "디자인 샘플", "표정(기본)", "표정(추가)"];
+    const order = ["프리미엄", "일반", "삼면도", "디자인 샘플", "표정(기본)", "표정(추가)"];
     const groups = order.filter((k) => byGroup.has(k)).concat(
       Array.from(byGroup.keys()).filter((k) => !order.includes(k))
     );
@@ -1473,7 +1500,7 @@
   const COPY = {
     kicker: "Notice",
     title: "작업 전 안내",
-    desc: "문의 전 꼭 읽어주세요!",
+    desc: "공지사항을 읽지 않아 생기는 피해엔 책임지지 않습니다! 문의 전 꼭 읽어주세요!",
     tableTitle: "저작권",
     listTitle: "안내",
     processTitle: "작업 프로세스",
@@ -1723,6 +1750,10 @@
             <div class="noticePanel__body">
               ${tableHTML}
             </div>
+              <div class="copyrightGuide">
+                ⯌기업세 저작권 제외, 기업적 사용은 불가합니다. 
+                만약 개인세에서 기업세로 전환 시, 초과된 저작권 비용을 추가로 지불해야 합니다.
+              </div>
             <section class="noticePanel">
               <div class="noticePanel__head">
                 <h3 class="noticePanel__title">${esc(COPY.listTitle)}</h3>

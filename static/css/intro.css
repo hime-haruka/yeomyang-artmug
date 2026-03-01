@@ -452,3 +452,12 @@
   0%,100% { filter: brightness(1) saturate(1); }
   50%     { filter: brightness(1.08) saturate(1.1); }
 }
+
+.slotGuide {
+  font-size: 14px;
+  color: #5f5f5f;
+}
+
+.eventGuide {
+  color: #ff9a17;
+}

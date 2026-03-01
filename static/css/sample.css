@@ -350,3 +350,40 @@
 
 .sampleTrack::before,
 .sampleTrack::after{ content:none !important; display:none !important; }
+
+.sampleSlide {
+  transition: transform var(--dur-3) var(--ease-out),
+              opacity var(--dur-3) var(--ease-out),
+              filter var(--dur-3) var(--ease-out);
+  transform: scale(0.92);
+  opacity: 0.65;
+  filter: blur(1px);
+}
+
+.sampleSlide.is-center{
+  transform: scale(1);
+  opacity: 1;
+  filter: none;
+  z-index: 2;
+}
+
+.sampleSlider__viewport{
+  position: relative;
+}
+
+.sampleSlider__viewport::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(to right,
+      rgb(255 255 255 / 0.9) 0%,
+      transparent 10%,
+      transparent 90%,
+      rgb(255 255 255 / 0.9) 100%);
+}
+
+.sampleTrack{
+  gap: 28px;
+}
