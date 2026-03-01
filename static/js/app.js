@@ -235,7 +235,6 @@
 
       <section class="introBlock introBlock--event">
         <h3 class="introBlock__title">${esc(COPY.eventTitle)}</h3>
-
         <div class="introEventList">
           ${eventHTML || `<div class="notice__error">이벤트를 불러오지 못했습니다.</div>`}
         </div>
@@ -247,6 +246,10 @@
 
           <section class="introBlock introBlock--slots">
             <h3 class="introBlock__title">${esc(COPY.slotTitle)}</h3>
+            <div class="slot-desc">
+              빈 슬롯: ○  찬 슬롯: ✦  예약 슬롯: ⯎
+            </div>
+            
             <div class="slotBoard">
               ${slotHTML || `<div class="notice__error">슬롯을 불러오지 못했습니다.</div>`}
             </div>
