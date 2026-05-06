@@ -428,25 +428,46 @@
     const s = String(url || "").trim();
     if (!s) return "";
 
-    if (s.includes("lh3.googleusercontent.com/d/")) return s;
+    const sizeSuffix = "=w720";
+
+    if (s.includes("lh3.googleusercontent.com/d/")) {
+      if (/=(w|s)\d+($|[?#])/.test(s)) return s;
+      return s + sizeSuffix;
+    }
 
     if (s.includes("drive.google.com")) {
       const id = extractDriveFileId(s);
-      if (id) return `https://lh3.googleusercontent.com/d/${id}`;
+      if (id) return `https://lh3.googleusercontent.com/d/${id}${sizeSuffix}`;
     }
 
     const idOnly = extractDriveFileId(s);
-    if (idOnly) return `https://lh3.googleusercontent.com/d/${idOnly}`;
+    if (idOnly) return `https://lh3.googleusercontent.com/d/${idOnly}${sizeSuffix}`;
 
     return s;
   }
 
-  function normalizeRow(o) {
-    const name = String(o.name ?? "").trim();
-    const desc = String(o.desc ?? "").trim();
-    const thumb = normalizeImageUrl(o.thumb);
-    const link = String(o.link ?? "").trim();
-    return { name, desc, thumb, link };
+  function pickValue(o, keys) {
+    for (const key of keys) {
+      const value = o[key];
+      if (value !== undefined && value !== null && String(value).trim() !== "") {
+        return value;
+      }
+    }
+    return "";
+  }
+
+  function normalizeOrder(value) {
+    const n = Number(String(value ?? "").replace(/[^0-9.-]/g, "").trim());
+    return Number.isFinite(n) ? n : Number.MAX_SAFE_INTEGER;
+  }
+
+  function normalizeRow(o, index) {
+    const order = normalizeOrder(pickValue(o, ["order", "Order", "ORDER", "순서", "\ufefforder"]));
+    const name = String(pickValue(o, ["name", "Name", "NAME", "작가명", "\ufeffname"])).trim();
+    const desc = String(pickValue(o, ["desc", "Desc", "DESC", "설명", "\ufeffdesc"])).trim();
+    const thumb = normalizeImageUrl(pickValue(o, ["thumb", "thumbnail", "image", "image_url", "Thumb", "THUMB", "\ufeffthumb"]));
+    const link = String(pickValue(o, ["link", "Link", "LINK", "url", "URL", "\ufefflink"])).trim();
+    return { order, index, name, desc, thumb, link };
   }
 
   function initials(name) {
@@ -468,7 +489,7 @@
             <p class="sec__desc">카드를 클릭하면 아트머그 링크로 이동합니다.</p>
           </div>
           <div class="card">
-            <div class="notice__error">CSV 데이터/공개 설정/헤더(name, desc, thumb, link)를 확인해주세요.</div>
+            <div class="notice__error">CSV 데이터/공개 설정/헤더(order, name, desc, thumb, link)를 확인해주세요.</div>
           </div>
         </div>
       `.trim();
@@ -476,10 +497,11 @@
     }
 
     const cardsHTML = items
-      .map((it) => {
+      .map((it, index) => {
         const href = it.link || "#";
         const title = it.name || "작가";
         const img = it.thumb;
+        const isPriorityImage = index < 2;
 
         return `
           <a class="tplCard collabCard"
@@ -489,7 +511,7 @@
             <div class="tplCard__thumb collabCard__thumb">
               ${
                 img
-                  ? `<img src="${escAttr(img)}" alt="${escAttr(title)}" loading="lazy">`
+                  ? `<img src="${escAttr(img)}" alt="${escAttr(title)}" width="720" height="540" loading="${isPriorityImage ? "eager" : "lazy"}" decoding="async" fetchpriority="${isPriorityImage ? "high" : "auto"}" referrerpolicy="no-referrer">`
                   : `<div class="collabCard__ph" aria-hidden="true">${escHtml(initials(title))}</div>`
               }
             </div>
@@ -553,7 +575,10 @@
       const items = objs
         .map(normalizeRow)
         .filter((it) => it.name && it.link)
-        .sort((a, b) => a.name.localeCompare(b.name, "ko"));
+        .sort((a, b) => {
+          if (a.order !== b.order) return a.order - b.order;
+          return a.index - b.index;
+        });
 
       renderCollab(items);
     } catch (err) {
@@ -747,6 +772,32 @@
     return modal;
   }
 
+  function applyParentViewportToModal() {
+    const modal = document.querySelector(".imgModal");
+    if (!modal) return;
+
+    const viewport = window.__syuraParentViewport || {};
+    const top = Math.max(0, Number(viewport.iframeTop || 0) * -1);
+    const height = Math.max(320, Number(viewport.viewportHeight || window.innerHeight || 0));
+
+    modal.style.setProperty("--syura-modal-top", `${Math.round(top)}px`);
+    modal.style.setProperty("--syura-modal-height", `${Math.round(height)}px`);
+  }
+
+  function requestParentViewport() {
+    try {
+      window.parent.postMessage({ source: "syura-css", type: "SYURA_REQUEST_PARENT_VIEWPORT" }, "*");
+    } catch (_) {}
+    applyParentViewportToModal();
+  }
+
+  window.addEventListener("message", (e) => {
+    const data = e.data || {};
+    if (data.source !== "syura-artmug-parent" || data.type !== "SYURA_PARENT_VIEWPORT") return;
+    window.__syuraParentViewport = data;
+    applyParentViewportToModal();
+  });
+
   function openModal(src, alt) {
     const modal = ensureModal();
     const img = modal.querySelector("[data-img]");
@@ -754,9 +805,12 @@
       img.src = src;
       img.alt = alt || "image";
     }
+    requestParentViewport();
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    setTimeout(requestParentViewport, 50);
+    setTimeout(requestParentViewport, 250);
   }
 
   function isSliderGroup(group) {
@@ -1907,3 +1961,93 @@
     });
 
   })();
+
+
+/* =========================================================
+   IFRAME HEIGHT / PARENT VIEWPORT SYNC
+   - 부모 페이지 iframe 높이 자동 조절
+   - 부모 페이지 뷰포트 기준 이미지 모달 위치 보정
+========================================================= */
+(function () {
+  const LEGACY_MESSAGE_TYPE = "yeomyang-artmug:height";
+  const SOURCE = "syura-css";
+  let lastHeight = 0;
+  let rafId = 0;
+
+  function getPageHeight() {
+    const body = document.body;
+    const html = document.documentElement;
+    return Math.ceil(Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    ));
+  }
+
+  function postToParent(payload) {
+    try {
+      window.parent.postMessage(payload, "*");
+    } catch (_) {}
+  }
+
+  function postHeight(force = false) {
+    rafId = 0;
+    const height = getPageHeight();
+    if (!height) return;
+    if (!force && Math.abs(height - lastHeight) < 2) return;
+    lastHeight = height;
+
+    postToParent({ type: LEGACY_MESSAGE_TYPE, height });
+    postToParent({ source: SOURCE, type: "SYURA_IFRAME_HEIGHT", height });
+  }
+
+  function requestPostHeight(force = false) {
+    if (rafId) return;
+    rafId = window.requestAnimationFrame(() => postHeight(force));
+  }
+
+  function applyParentViewport(data) {
+    window.__syuraParentViewport = data || {};
+    const modal = document.querySelector(".imgModal");
+    if (!modal) return;
+
+    const top = Math.max(0, Number(data.iframeTop || 0) * -1);
+    const height = Math.max(320, Number(data.viewportHeight || window.innerHeight || 0));
+    modal.style.setProperty("--syura-modal-top", `${Math.round(top)}px`);
+    modal.style.setProperty("--syura-modal-height", `${Math.round(height)}px`);
+  }
+
+  window.addEventListener("message", (e) => {
+    const data = e.data || {};
+    if (data.source !== "syura-artmug-parent") return;
+    if (data.type === "SYURA_PARENT_VIEWPORT") applyParentViewport(data);
+  });
+
+  window.addEventListener("load", () => requestPostHeight(true));
+  window.addEventListener("resize", () => requestPostHeight(true));
+  document.addEventListener("DOMContentLoaded", () => {
+    postToParent({ source: SOURCE, type: "SYURA_IFRAME_READY" });
+    requestPostHeight(true);
+  });
+  document.addEventListener("load", () => requestPostHeight(true), true);
+
+  if ("ResizeObserver" in window) {
+    const ro = new ResizeObserver(() => requestPostHeight());
+    ro.observe(document.documentElement);
+    if (document.body) ro.observe(document.body);
+  }
+
+  if ("MutationObserver" in window) {
+    const mo = new MutationObserver(() => requestPostHeight());
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+  }
+
+  setTimeout(() => {
+    postToParent({ source: SOURCE, type: "SYURA_IFRAME_READY" });
+    requestPostHeight(true);
+  }, 300);
+  setTimeout(() => requestPostHeight(true), 1000);
+  setTimeout(() => requestPostHeight(true), 2000);
+})();

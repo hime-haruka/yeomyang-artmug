@@ -276,8 +276,11 @@
 ========================================================= */
 
 .imgModal{
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--syura-modal-top, 0px);
+  height: var(--syura-modal-height, 100vh);
   z-index: 9999;
   display: none;
 }
@@ -291,9 +294,12 @@
 }
 
 .imgModal__panel{
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: min(1200px, calc(100vw - 20px));
-  margin: 28px auto;
+  max-height: calc(var(--syura-modal-height, 100vh) - 32px);
   border-radius: 22px;
   overflow: hidden;
   background: #000;
@@ -333,7 +339,7 @@
   width: 100%;
   height: auto;
   display:block;
-  max-height: 86vh;
+  max-height: calc(var(--syura-modal-height, 100vh) - 36px);
   object-fit: contain;
 }
 

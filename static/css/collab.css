@@ -178,3 +178,14 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+@supports (content-visibility: auto) {
+  .tplCard.collabCard {
+    content-visibility: auto;
+    contain-intrinsic-size: 360px 430px;
+  }
+}
+
+.collabCard__thumb img {
+  background: var(--panel-2);
+}
